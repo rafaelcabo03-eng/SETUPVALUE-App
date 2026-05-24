@@ -1,4 +1,4 @@
- import React, { useState, useEffect } from "react";
+ import React, { useState } from "react";
 
 export default function App() {
   const brandPrices = {
@@ -111,8 +111,7 @@ export default function App() {
   const [pcCase, setPcCase] = useState("Caixa RGB");
   const [cooling, setCooling] = useState("Watercooler 240mm");
   const [monitor, setMonitor] = useState("144Hz");
-
-  const [mostrarResultado, setMostrarResultado] = useState(false);
+  const [copiado, setCopiado] = useState(false);
 
   const total =
     brandPrices[brand] +
@@ -126,63 +125,62 @@ export default function App() {
     coolingPrices[cooling] +
     monitorPrices[monitor];
 
-  useEffect(() => {
-    setMostrarResultado(false);
-  }, [
-    brand,
-    gpu,
-    cpu,
-    ram,
-    storage,
-    motherboard,
-    psu,
-    pcCase,
-    cooling,
-    monitor,
-  ]);
-
   let nivel = "";
   let dica = "";
   let roast = "";
+  let percent = Math.min((total / 3800) * 100, 100);
 
   if (total < 400) {
     nivel = "Setup Batata 🥔";
     dica = "Isto luta pela sobrevivência.";
     roast = "O Chrome abre e o PC entra em coma.";
-  }
-
-  else if (total < 900) {
+  } else if (total < 900) {
     nivel = "Setup Gamer 🎮";
     dica = "Já joga bem sem explodir.";
     roast = "Fortnite já não parece PowerPoint.";
-  }
-
-  else if (total < 1800) {
+  } else if (total < 1800) {
     nivel = "Máquina de Guerra 🔥";
     dica = "Isto já mete medo.";
     roast = "O teu setup dá bullying aos gráficos ultra.";
-  }
-
-  else if (total < 3000) {
+  } else if (total < 3000) {
     nivel = "Monstro Nuclear ☢️";
     dica = "Isto já é criminoso.";
     roast = "A NASA está a monitorizar este PC.";
-  }
-
-  else {
+  } else {
     nivel = "💀 BOMBOCLAT 💀";
     dica = "Isto não é um setup. É tecnologia alienígena.";
     roast = "O teu PC renderiza a realidade em tempo real.";
   }
 
-  function analisarSetup() {
-    setMostrarResultado(true);
+  function copiarSetup() {
+    const texto = `O meu setup no SetupValue:
+Marca: ${brand}
+GPU: ${gpu}
+CPU: ${cpu}
+RAM: ${ram}
+Armazenamento: ${storage}
+Motherboard: ${motherboard}
+Fonte: ${psu}
+Caixa: ${pcCase}
+Cooling: ${cooling}
+Monitor: ${monitor}
+
+Valor estimado: €${total}
+Resultado: ${nivel}
+${roast}`;
+
+    navigator.clipboard.writeText(texto);
+    setCopiado(true);
+
+    setTimeout(() => {
+      setCopiado(false);
+    }, 2000);
   }
 
   return (
     <div
       style={{
-        backgroundColor: "#020617",
+        background: "linear-gradient(135deg, #020617, #111827, #1e1b4b)",
         minHeight: "100vh",
         color: "white",
         display: "flex",
@@ -196,17 +194,18 @@ export default function App() {
         style={{
           backgroundColor: "#0f172a",
           padding: "30px",
-          borderRadius: "24px",
-          width: "500px",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+          borderRadius: "28px",
+          width: "520px",
+          boxShadow: "0 25px 80px rgba(0,0,0,0.6)",
+          border: "1px solid #334155",
         }}
       >
-        <h1 style={{ textAlign: "center", fontSize: "36px" }}>
+        <h1 style={{ textAlign: "center", fontSize: "38px", margin: 0 }}>
           💻 SetupValue
         </h1>
 
         <p style={{ textAlign: "center", color: "#94a3b8" }}>
-          Máquina ou batata? Descobre agora 😭
+          Descobre se o teu PC é máquina ou batata 😭
         </p>
 
         <SelectBox label="Marca do PC" value={brand} setValue={setBrand} options={brandPrices} />
@@ -220,57 +219,75 @@ export default function App() {
         <SelectBox label="Cooling" value={cooling} setValue={setCooling} options={coolingPrices} />
         <SelectBox label="Monitor" value={monitor} setValue={setMonitor} options={monitorPrices} />
 
-        <button
-          onClick={analisarSetup}
+        <div
           style={{
-            width: "100%",
             marginTop: "25px",
-            padding: "16px",
-            borderRadius: "15px",
-            border: "none",
-            backgroundColor: "#22c55e",
-            color: "white",
-            fontSize: "18px",
-            fontWeight: "bold",
-            cursor: "pointer",
+            backgroundColor: "#14532d",
+            padding: "22px",
+            borderRadius: "20px",
+            textAlign: "center",
           }}
         >
-          🔥 Máquina ou Batata? Descobre Agora!
-        </button>
+          <p style={{ margin: 0 }}>Valor estimado:</p>
 
-        {mostrarResultado && (
+          <h2 style={{ fontSize: "50px", margin: "10px 0" }}>
+            €{total}
+          </h2>
+
+          <h2>{nivel}</h2>
+
           <div
             style={{
-              marginTop: "25px",
-              backgroundColor: "#14532d",
-              padding: "20px",
-              borderRadius: "18px",
-              textAlign: "center",
+              backgroundColor: "#052e16",
+              borderRadius: "999px",
+              height: "18px",
+              overflow: "hidden",
+              marginTop: "15px",
+              border: "1px solid #22c55e",
             }}
           >
-            <p>Valor estimado:</p>
-
-            <h2 style={{ fontSize: "48px", margin: "10px 0" }}>
-              €{total}
-            </h2>
-
-            <h2>{nivel}</h2>
-
-            <p style={{ color: "#bbf7d0", marginTop: "10px" }}>
-              {dica}
-            </p>
-
-            <p
+            <div
               style={{
-                color: "#facc15",
-                marginTop: "12px",
-                fontWeight: "bold",
+                width: `${percent}%`,
+                height: "100%",
+                background: "linear-gradient(90deg, #22c55e, #facc15, #ef4444)",
+                transition: "0.3s",
               }}
-            >
-              😂 {roast}
-            </p>
+            />
           </div>
-        )}
+
+          <p style={{ color: "#bbf7d0", marginTop: "15px" }}>
+            {dica}
+          </p>
+
+          <p
+            style={{
+              color: "#facc15",
+              marginTop: "12px",
+              fontWeight: "bold",
+            }}
+          >
+            😂 {roast}
+          </p>
+
+          <button
+            onClick={copiarSetup}
+            style={{
+              width: "100%",
+              marginTop: "15px",
+              padding: "14px",
+              borderRadius: "14px",
+              border: "none",
+              backgroundColor: "#2563eb",
+              color: "white",
+              fontSize: "16px",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            {copiado ? "Copiado! 🔥" : "Copiar setup para mandar aos amigos"}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -278,7 +295,7 @@ export default function App() {
 
 function SelectBox({ label, value, setValue, options }) {
   return (
-    <div style={{ marginTop: "18px" }}>
+    <div style={{ marginTop: "16px" }}>
       <label style={{ fontWeight: "bold" }}>{label}</label>
 
       <select
@@ -288,7 +305,7 @@ function SelectBox({ label, value, setValue, options }) {
           width: "100%",
           padding: "12px",
           marginTop: "6px",
-          borderRadius: "10px",
+          borderRadius: "12px",
           border: "none",
           fontSize: "16px",
         }}

@@ -111,6 +111,7 @@ export default function App() {
   const [pcCase, setPcCase] = useState("Caixa RGB");
   const [cooling, setCooling] = useState("Watercooler 240mm");
   const [monitor, setMonitor] = useState("144Hz");
+
   const [mostrarResultado, setMostrarResultado] = useState(false);
 
   const total =
@@ -127,7 +128,18 @@ export default function App() {
 
   useEffect(() => {
     setMostrarResultado(false);
-  }, [brand, gpu, cpu, ram, storage, motherboard, psu, pcCase, cooling, monitor]);
+  }, [
+    brand,
+    gpu,
+    cpu,
+    ram,
+    storage,
+    motherboard,
+    psu,
+    pcCase,
+    cooling,
+    monitor,
+  ]);
 
   let nivel = "";
   let dica = "";
@@ -137,19 +149,27 @@ export default function App() {
     nivel = "Setup Batata 🥔";
     dica = "Isto luta pela sobrevivência.";
     roast = "O Chrome abre e o PC entra em coma.";
-  } else if (total < 900) {
+  }
+
+  else if (total < 900) {
     nivel = "Setup Gamer 🎮";
     dica = "Já joga bem sem explodir.";
     roast = "Fortnite já não parece PowerPoint.";
-  } else if (total < 1800) {
+  }
+
+  else if (total < 1800) {
     nivel = "Máquina de Guerra 🔥";
     dica = "Isto já mete medo.";
     roast = "O teu setup dá bullying aos gráficos ultra.";
-  } else if (total < 3000) {
+  }
+
+  else if (total < 3000) {
     nivel = "Monstro Nuclear ☢️";
     dica = "Isto já é criminoso.";
     roast = "A NASA está a monitorizar este PC.";
-  } else {
+  }
+
+  else {
     nivel = "💀 BOMBOCLAT 💀";
     dica = "Isto não é um setup. É tecnologia alienígena.";
     roast = "O teu PC renderiza a realidade em tempo real.";
